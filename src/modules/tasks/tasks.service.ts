@@ -1,5 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { AppSupabaseClient } from "@/types/database.types";
 import { TasksRepository } from "./tasks.repository";
 import { CreateTaskSchema, UpdateTaskSchema, TaskIdSchema } from "./tasks.schema";
 import { TaskNotFoundError } from "./tasks.errors";
@@ -14,7 +13,7 @@ import type {
 export class TasksService {
   private readonly repository: TasksRepository;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: AppSupabaseClient) {
     this.repository = new TasksRepository(supabase);
   }
 

@@ -1,10 +1,9 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { Database, AppSupabaseClient } from "@/types/database.types";
 import type { Task, CreateTaskInput, UpdateTaskInput, TaskFilterOptions } from "./tasks.types";
 import { DatabaseError } from "@/lib/errors/app-error";
 
 export class TasksRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   private mapTaskRow(row: Database["public"]["Tables"]["tasks"]["Row"]): Task {
     return {
