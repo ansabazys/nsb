@@ -1,5 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { AppSupabaseClient } from "@/types/database.types";
 import { HabitsRepository } from "./habits.repository";
 import {
   CreateHabitSchema,
@@ -26,7 +25,7 @@ import type {
 export class HabitsService {
   private readonly repository: HabitsRepository;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: AppSupabaseClient) {
     this.repository = new HabitsRepository(supabase);
   }
 

@@ -1,10 +1,9 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { Database, AppSupabaseClient } from "@/types/database.types";
 import type { Habit, HabitCompletion, CreateHabitInput, UpdateHabitInput } from "./habits.types";
 import { DatabaseError } from "@/lib/errors/app-error";
 
 export class HabitsRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   private mapHabitRow(row: Database["public"]["Tables"]["habits"]["Row"]): Habit {
     return {
