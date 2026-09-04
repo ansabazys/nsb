@@ -1,5 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { AppSupabaseClient } from "@/types/database.types";
 import { SettingsRepository } from "./settings.repository";
 import { UpdateProfileSchema } from "./settings.schema";
 import { ProfileNotFoundError } from "./settings.errors";
@@ -8,7 +7,7 @@ import type { UserProfile, UpdateProfileInput } from "./settings.types";
 export class SettingsService {
   private readonly repository: SettingsRepository;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: AppSupabaseClient) {
     this.repository = new SettingsRepository(supabase);
   }
 

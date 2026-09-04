@@ -1,10 +1,9 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { Database, AppSupabaseClient } from "@/types/database.types";
 import type { UserProfile, UpdateProfileInput } from "./settings.types";
 import { DatabaseError } from "@/lib/errors/app-error";
 
 export class SettingsRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   private mapProfileRow(row: Database["public"]["Tables"]["profiles"]["Row"]): UserProfile {
     return {
