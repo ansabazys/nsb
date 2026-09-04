@@ -1,10 +1,9 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database, GoalStatus } from "@/types/database.types";
+import type { Database, AppSupabaseClient, GoalStatus } from "@/types/database.types";
 import type { Goal, CreateGoalInput, UpdateGoalInput } from "./goals.types";
 import { DatabaseError } from "@/lib/errors/app-error";
 
 export class GoalsRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   private mapGoalRow(row: Database["public"]["Tables"]["goals"]["Row"]): Goal {
     return {

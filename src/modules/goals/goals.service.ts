@@ -1,5 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database, GoalStatus } from "@/types/database.types";
+import type { AppSupabaseClient, GoalStatus } from "@/types/database.types";
 import { GoalsRepository } from "./goals.repository";
 import {
   CreateGoalSchema,
@@ -19,7 +18,7 @@ import type {
 export class GoalsService {
   private readonly repository: GoalsRepository;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: AppSupabaseClient) {
     this.repository = new GoalsRepository(supabase);
   }
 
