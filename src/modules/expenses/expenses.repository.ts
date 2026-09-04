@@ -1,5 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { Database, AppSupabaseClient } from "@/types/database.types";
 import type {
   Expense,
   ExpenseWithCategory,
@@ -11,7 +10,7 @@ import type {
 import { DatabaseError } from "@/lib/errors/app-error";
 
 export class ExpensesRepository {
-  constructor(private readonly supabase: SupabaseClient<Database>) {}
+  constructor(private readonly supabase: AppSupabaseClient) {}
 
   private mapCategoryRow(
     row: Database["public"]["Tables"]["expense_categories"]["Row"]

@@ -1,5 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database.types";
+import type { AppSupabaseClient } from "@/types/database.types";
 import { ExpensesRepository } from "./expenses.repository";
 import {
   CreateExpenseSchema,
@@ -30,7 +29,7 @@ import type {
 export class ExpensesService {
   private readonly repository: ExpensesRepository;
 
-  constructor(supabase: SupabaseClient<Database>) {
+  constructor(supabase: AppSupabaseClient) {
     this.repository = new ExpensesRepository(supabase);
   }
 
