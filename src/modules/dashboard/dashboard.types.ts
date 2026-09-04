@@ -37,3 +37,25 @@ export interface DashboardTodaySummary {
   goals: GoalsSummary;
   overallScore: number; // 0 - 100 aggregate day productivity score
 }
+
+export type HabitAccent =
+  | "rose"
+  | "sky"
+  | "blue"
+  | "amber"
+  | "orange"
+  | "purple"
+  | "emerald";
+
+export interface HabitWidgetItem {
+  id: string;
+  title: string;
+  startTime: string; // "HH:MM" e.g. "07:45"
+  endTime: string; // "HH:MM" e.g. "08:15"
+  duration: string; // e.g. "30 min", "15 min"
+  isCompleted: boolean;
+  accentColor: HabitAccent | string;
+  icon: string; // e.g. "workout", "shower", "coffee", "mail"
+  hourMarker?: string | null;
+}
+
