@@ -1,3 +1,5 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 export type Json =
   | string
   | number
@@ -10,6 +12,9 @@ export type HabitFrequency = "daily" | "weekly" | "custom";
 export type GoalStatus = "not_started" | "in_progress" | "completed" | "abandoned";
 export type TaskStatus = "pending" | "in_progress" | "completed" | "cancelled";
 export type TaskPriority = "low" | "medium" | "high" | "urgent";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AppSupabaseClient = SupabaseClient<Database, any, any, any>;
 
 export interface Database {
   public: {
@@ -318,14 +323,20 @@ export interface Database {
         ];
       };
     };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
     Enums: {
       habit_frequency: HabitFrequency;
       goal_status: GoalStatus;
       task_status: TaskStatus;
       task_priority: TaskPriority;
     };
-    CompositeTypes: Record<string, never>;
+    CompositeTypes: {
+      [_ in never]: never;
+    };
   };
 }

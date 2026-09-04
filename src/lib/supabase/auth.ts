@@ -21,11 +21,36 @@ export async function getCurrentUser(): Promise<User | null> {
 
 /**
  * Requires an authenticated Supabase user; throws UnauthorizedError if unauthenticated.
+ * Automatically ensures a corresponding profile row exists to satisfy foreign keys.
  */
 export async function requireCurrentUser(): Promise<User> {
   const user = await getCurrentUser();
   if (!user) {
     throw new UnauthorizedError("You must be logged in to perform this action.");
   }
+
+  try {
+    const { createAdminClient } = await import("./admin");
+    const admin = createAdminClient();
+    const rawName =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      user.user_metadata?.first_name ||
+      (user.email ? user.email.split("@")[0] : "User");
+
+    await admin.from("profiles").upsert(
+      {
+        id: user.id,
+        email: user.email ?? "",
+        full_name: rawName,
+        timezone: "UTC",
+      },
+      { onConflict: "id" }
+    );
+  } catch (err) {
+    console.warn("[requireCurrentUser] Warning: profile upsert check failed:", err);
+  }
+
   return user;
 }
+
