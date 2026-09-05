@@ -57,6 +57,7 @@ export interface Database {
           description: string | null;
           frequency: HabitFrequency;
           target_per_period: number;
+          schedule_weekdays?: number[];
           is_archived: boolean;
           created_at: string;
           updated_at: string;
@@ -68,6 +69,7 @@ export interface Database {
           description?: string | null;
           frequency?: HabitFrequency;
           target_per_period?: number;
+          schedule_weekdays?: number[];
           is_archived?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -79,6 +81,7 @@ export interface Database {
           description?: string | null;
           frequency?: HabitFrequency;
           target_per_period?: number;
+          schedule_weekdays?: number[];
           is_archived?: boolean;
           created_at?: string;
           updated_at?: string;

@@ -58,4 +58,3 @@ export interface HabitWidgetItem {
   icon: string; // e.g. "workout", "shower", "coffee", "mail"
   hourMarker?: string | null;
 }
-

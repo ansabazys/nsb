@@ -74,37 +74,28 @@ export function mapHabitToWidgetItem(
   ];
   const accentColor = ACCENTS[index % ACCENTS.length];
 
-  // Parse time from description if present e.g. "Time: 08:30"
-  const timeMatch = habit.description?.match(/Time:\s*(\d{1,2}:\d{2})/i);
+  // A single time is shown as-is; a supplied range also receives a calculated duration.
+  const timeMatch = habit.description?.match(
+    /Time:\s*(\d{1,2}:\d{2})(?:\s*(?:-|–|to)\s*(\d{1,2}:\d{2}))?/i
+  );
   let startTime = "";
   let endTime = "";
-  let duration = "30 min";
+  let duration = "";
 
-  if (timeMatch && timeMatch[1]) {
-    const rawTime = timeMatch[1];
-    const [hStr, mStr] = rawTime.split(":");
-    let hours = parseInt(hStr, 10);
-    let minutes = parseInt(mStr, 10);
-    startTime = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+  if (timeMatch?.[1]) {
+    const [startHours, startMinutes] = timeMatch[1].split(":").map(Number);
+    startTime = `${String(startHours).padStart(2, "0")}:${String(startMinutes).padStart(2, "0")}`;
 
-    // Add 30 mins for end time
-    minutes += 30;
-    if (minutes >= 60) {
-      hours = (hours + 1) % 24;
-      minutes = minutes - 60;
+    if (timeMatch[2]) {
+      const [endHours, endMinutes] = timeMatch[2].split(":").map(Number);
+      const startTotalMinutes = startHours * 60 + startMinutes;
+      let endTotalMinutes = endHours * 60 + endMinutes;
+      if (endTotalMinutes < startTotalMinutes) endTotalMinutes += 24 * 60;
+
+      endTime = `${String(endHours).padStart(2, "0")}:${String(endMinutes).padStart(2, "0")}`;
+      const minutes = endTotalMinutes - startTotalMinutes;
+      duration = minutes % 60 === 0 ? `${minutes / 60} hr` : `${minutes} min`;
     }
-    endTime = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
-  } else {
-    // If no explicit time was set, create a sequential time slot starting at 07:30
-    const startHour = (7 + Math.floor((index * 45) / 60)) % 24;
-    const startMin = (index * 45) % 60;
-    const endTotalMin = startHour * 60 + startMin + 30;
-    const endHour = Math.floor(endTotalMin / 60) % 24;
-    const endMin = endTotalMin % 60;
-
-    startTime = `${String(startHour).padStart(2, "0")}:${String(startMin).padStart(2, "0")}`;
-    endTime = `${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}`;
-    duration = "30 min";
   }
 
   const iconKey = detectHabitIcon(habit.name);
@@ -120,4 +111,3 @@ export function mapHabitToWidgetItem(
     icon: iconKey,
   };
 }
-

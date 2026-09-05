@@ -74,7 +74,8 @@ export class HabitsService {
     completedCount: number;
     completionPercentage: number;
   }> {
-    const activeHabits = await this.getUserHabits(userId, false);
+    const weekday = new Date().getDay();
+    const activeHabits = (await this.getUserHabits(userId, false)).filter((habit) => habit.scheduleWeekdays.includes(weekday));
     const completedHabits = activeHabits.filter((h) => h.streak.isCompletedToday);
 
     const totalCount = activeHabits.length;

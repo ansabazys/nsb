@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import {
   Dumbbell,
@@ -16,6 +17,7 @@ import {
   Code,
   Sparkles,
   Moon,
+  Sun,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -52,6 +54,14 @@ export interface HabitWidgetProps {
 
 export type DayTimelineProps = HabitWidgetProps;
 
+function getExpandedHabitMap(
+  habits: HabitWidgetItem[],
+  defaultExpandedIds: string[]
+): Record<string, boolean> {
+  const expandedId = defaultExpandedIds[0] ?? habits.find((habit) => !habit.isCompleted)?.id;
+  return expandedId ? { [expandedId]: true } : {};
+}
+
 // ============================================================================
 // Accent Styles Lookup
 // ============================================================================
@@ -71,7 +81,7 @@ const ACCENT_MAP: Record<string, AccentConfig> = {
   rose: {
     indicatorBg: "bg-[#e11d48]",
     indicatorText: "text-white",
-    indicatorCompletedBg: "bg-[#be123c]/40 border border-rose-500/30",
+    indicatorCompletedBg: "bg-[#4c0519] border border-rose-500/30",
     indicatorCompletedText: "text-rose-200/80",
     checkboxBorder: "border-[#f43f5e]",
     checkboxHover: "hover:bg-rose-500/10",
@@ -81,7 +91,7 @@ const ACCENT_MAP: Record<string, AccentConfig> = {
   sky: {
     indicatorBg: "bg-[#0ea5e9]",
     indicatorText: "text-white",
-    indicatorCompletedBg: "bg-[#0369a1]/40 border border-sky-500/30",
+    indicatorCompletedBg: "bg-[#082f49] border border-sky-500/30",
     indicatorCompletedText: "text-sky-200/80",
     checkboxBorder: "border-[#38bdf8]",
     checkboxHover: "hover:bg-sky-500/10",
@@ -91,7 +101,7 @@ const ACCENT_MAP: Record<string, AccentConfig> = {
   blue: {
     indicatorBg: "bg-[#2563eb]",
     indicatorText: "text-white",
-    indicatorCompletedBg: "bg-[#1d4ed8]/40 border border-blue-500/30",
+    indicatorCompletedBg: "bg-[#172554] border border-blue-500/30",
     indicatorCompletedText: "text-blue-200/80",
     checkboxBorder: "border-[#60a5fa]",
     checkboxHover: "hover:bg-blue-500/10",
@@ -101,7 +111,7 @@ const ACCENT_MAP: Record<string, AccentConfig> = {
   amber: {
     indicatorBg: "bg-[#f59e0b]",
     indicatorText: "text-white",
-    indicatorCompletedBg: "bg-[#b45309]/40 border border-amber-500/30",
+    indicatorCompletedBg: "bg-[#451a03] border border-amber-500/30",
     indicatorCompletedText: "text-amber-200/80",
     checkboxBorder: "border-[#fbbf24]",
     checkboxHover: "hover:bg-amber-500/10",
@@ -111,7 +121,7 @@ const ACCENT_MAP: Record<string, AccentConfig> = {
   orange: {
     indicatorBg: "bg-[#f97316]",
     indicatorText: "text-white",
-    indicatorCompletedBg: "bg-[#c2410c]/40 border border-orange-500/30",
+    indicatorCompletedBg: "bg-[#431407] border border-orange-500/30",
     indicatorCompletedText: "text-orange-200/80",
     checkboxBorder: "border-[#fb923c]",
     checkboxHover: "hover:bg-orange-500/10",
@@ -121,7 +131,7 @@ const ACCENT_MAP: Record<string, AccentConfig> = {
   purple: {
     indicatorBg: "bg-[#a855f7]",
     indicatorText: "text-white",
-    indicatorCompletedBg: "bg-[#7e22ce]/40 border border-purple-500/30",
+    indicatorCompletedBg: "bg-[#3b0764] border border-purple-500/30",
     indicatorCompletedText: "text-purple-200/80",
     checkboxBorder: "border-[#c084fc]",
     checkboxHover: "hover:bg-purple-500/10",
@@ -131,7 +141,7 @@ const ACCENT_MAP: Record<string, AccentConfig> = {
   emerald: {
     indicatorBg: "bg-[#10b981]",
     indicatorText: "text-white",
-    indicatorCompletedBg: "bg-[#047857]/40 border border-emerald-500/30",
+    indicatorCompletedBg: "bg-[#022c22] border border-emerald-500/30",
     indicatorCompletedText: "text-emerald-200/80",
     checkboxBorder: "border-[#34d399]",
     checkboxHover: "hover:bg-emerald-500/10",
@@ -260,25 +270,28 @@ export function HabitCard({
   onToggleExpand,
 }: HabitCardProps) {
   const accent = ACCENT_MAP[habit.accentColor] || ACCENT_MAP.sky;
+  const hasTime = Boolean(habit.startTime || habit.endTime);
 
   return (
-    <div
+    <motion.div
+      layout
+      transition={{ type: "spring", stiffness: 420, damping: 34 }}
       onClick={() => onToggleExpand(habit.id)}
       className={cn(
-        "group relative w-[240px] rounded-lg bg-neutral-900/90 border border-neutral-800/80 px-3.5 flex justify-between gap-2.5 transition-all duration-200 shadow-sm shrink-0 font-sans cursor-pointer select-none",
-        isExpanded
-          ? "h-[92px] py-3.5 items-start"
-          : "h-[44px] py-2.5 items-center hover:border-neutral-700/80 hover:bg-neutral-800/60",
+        "group relative w-[240px] rounded-lg border border-neutral-800/80 bg-neutral-950/75 px-3.5 flex justify-between gap-2.5 transition-all duration-200 shadow-sm shrink-0 font-sans cursor-pointer select-none",
+        isExpanded && hasTime
+          ? "h-[72px] py-3 items-start"
+          : "h-[44px] py-2.5 items-center hover:border-neutral-700/80 hover:bg-neutral-950/90",
         habit.isCompleted
-          ? "opacity-60 hover:opacity-75 bg-neutral-950/60"
-          : "hover:border-neutral-700/80 hover:bg-neutral-900/95"
+          ? "opacity-60 hover:opacity-75"
+          : "hover:border-neutral-700/80 hover:bg-neutral-950/90"
       )}
     >
       {/* Habit Details */}
       <div
         className={cn(
           "flex flex-col min-w-0 pr-1 font-sans",
-          isExpanded ? "justify-between h-full" : "justify-center"
+          "justify-center h-full"
         )}
       >
         <h4
@@ -292,18 +305,18 @@ export function HabitCard({
           {habit.title}
         </h4>
 
-        {isExpanded && (
-          <div className="text-[12.5px] font-sans text-neutral-400 leading-tight animate-in fade-in-0 duration-150">
-            <p>
-              {habit.startTime && habit.endTime
-                ? `${habit.startTime} – ${habit.endTime}`
-                : "Daily Ritual"}
-              {habit.duration && (
-                <span className="text-neutral-400/90 ml-1">({habit.duration})</span>
-              )}
-            </p>
-          </div>
+        {isExpanded && (habit.startTime || habit.endTime) && (
+          <motion.p
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="mt-1.5 text-[12px] font-sans text-neutral-400 leading-tight"
+          >
+            {[habit.startTime, habit.endTime].filter(Boolean).join(" – ")}
+            {habit.duration && <span className="ml-1 text-neutral-500">({habit.duration})</span>}
+          </motion.p>
         )}
+
       </div>
 
       {/* Completion Checkbox (Visible when expanded) */}
@@ -325,7 +338,7 @@ export function HabitCard({
           {habit.isCompleted && <Check className="w-3 h-3 stroke-[3]" />}
         </button>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -348,13 +361,14 @@ export function HabitIndicatorBlock({
 }: HabitIndicatorBlockProps) {
   const accent = ACCENT_MAP[habit.accentColor] || ACCENT_MAP.sky;
   const Icon = resolveHabitIcon(habit.icon);
+  const hasTime = Boolean(habit.startTime || habit.endTime);
 
   return (
     <div
       onClick={() => onToggleExpand?.(habit.id)}
       className={cn(
         "relative z-10 w-[38px] rounded-lg flex flex-col items-center transition-all duration-200 shadow-sm shrink-0 cursor-pointer select-none",
-        isExpanded ? "h-[92px] pt-3.5" : "h-[44px] justify-center",
+        isExpanded && hasTime ? "h-[72px] pt-3" : "h-[44px] justify-center",
         habit.isCompleted
           ? cn(accent.indicatorCompletedBg, accent.indicatorCompletedText)
           : cn(accent.indicatorBg, accent.indicatorText)
@@ -381,17 +395,14 @@ export function HabitWidget({
   const router = useRouter();
   const [habits, setHabits] = React.useState<HabitWidgetItem[]>(initialHabits);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
-  const [expandedIds, setExpandedIds] = React.useState<Record<string, boolean>>(() => {
-    const map: Record<string, boolean> = {};
-    defaultExpandedIds.forEach((id) => {
-      map[id] = true;
-    });
-    return map;
-  });
+  const [expandedIds, setExpandedIds] = React.useState<Record<string, boolean>>(() =>
+    getExpandedHabitMap(initialHabits, defaultExpandedIds)
+  );
 
   // Keep habits in sync with prop updates
   React.useEffect(() => {
     setHabits(initialHabits);
+    setExpandedIds(getExpandedHabitMap(initialHabits, defaultExpandedIds));
   }, [initialHabits]);
 
   // Real-time synchronization for habits created/updated anywhere in the app
@@ -437,6 +448,15 @@ export function HabitWidget({
         return item;
       })
     );
+
+    if (nextState) {
+      const currentIndex = habits.findIndex((item) => item.id === id);
+      const nextHabit = habits[currentIndex + 1];
+      if (nextHabit) {
+        setExpandedIds({ [nextHabit.id]: true });
+        onToggleExpand?.(nextHabit.id, true);
+      }
+    }
     onToggleHabit?.(id, nextState);
 
     try {
@@ -519,7 +539,11 @@ export function HabitWidget({
           /* ================================================================= */
           /* Habit List                                                        */
           /* ================================================================= */
-          <div className="flex flex-col gap-2.5">
+          <div className="relative flex flex-col gap-2.5 py-8">
+            {/* The day rail expands with the list; it is not tied to fixed clock hours. */}
+            <div aria-hidden="true" className="absolute bottom-4 left-[18px] top-4 z-0 w-[2px] rounded-full bg-gradient-to-b from-amber-300/80 via-neutral-500/70 to-indigo-300/80 shadow-[0_0_8px_rgba(163,163,163,0.18)]" />
+            <Sun aria-hidden="true" className="absolute -top-1 left-[7px] z-20 h-6 w-6 rounded-full border border-neutral-700 bg-neutral-900 p-1 text-amber-300 shadow-sm" />
+            <Moon aria-hidden="true" className="absolute -bottom-1 left-[7px] z-20 h-6 w-6 rounded-full border border-neutral-700 bg-neutral-900 p-1 text-indigo-300 shadow-sm" />
             {habits.map((habit) => {
               const isExpanded = !!expandedIds[habit.id];
 
@@ -567,4 +591,3 @@ export function HabitWidget({
 
 export const DayTimeline = HabitWidget;
 export default HabitWidget;
-

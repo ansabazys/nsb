@@ -7,6 +7,7 @@ config({ path: resolve(process.cwd(), ".env") });
 
 import { createAdminClient } from "../src/lib/supabase/admin";
 import { getTodayDateString, addDays } from "../src/lib/utils/date.utils";
+import { DEFAULT_HABITS } from "../src/modules/habits/default-habits";
 
 async function seed() {
   console.log("🌱 Starting NSB database seeding for Ansab...");
@@ -95,68 +96,55 @@ async function seed() {
 
   // 4. Seed Habits & Completions
   console.log("4️⃣ Seeding habits & completions...");
-  const habit1Id = "10000000-0000-0000-0000-000000000011";
-  const habit2Id = "10000000-0000-0000-0000-000000000012";
-  const habit3Id = "10000000-0000-0000-0000-000000000013";
+  const seededHabits = DEFAULT_HABITS.map((habit, index) => ({
+    id: `10000000-0000-0000-0000-${String(index + 101).padStart(12, "0")}`,
+    user_id: userId,
+    name: habit.name,
+    description: null,
+    frequency: habit.weekdays.length === 7 ? "daily" : "custom",
+    target_per_period: 1,
+    kind: habit.kind,
+    category: habit.category,
+    priority: habit.priority,
+    schedule_weekdays: habit.weekdays,
+    target_time: habit.time ?? null,
+    target_end_time: habit.endTime ?? null,
+    is_archived: false,
+  }));
 
-  await supabase.from("habits").upsert([
-    {
-      id: habit1Id,
-      user_id: userId,
-      name: "Morning Meditation (15 mins)",
-      description: "Mindfulness and breathwork to start the day with clarity.",
-      frequency: "daily",
-      target_per_period: 1,
-      is_archived: false,
-    },
-    {
-      id: habit2Id,
-      user_id: userId,
-      name: "Daily Workout / Gym",
-      description: "Strength training, running, or high intensity cardio.",
-      frequency: "daily",
-      target_per_period: 1,
-      is_archived: false,
-    },
-    {
-      id: habit3Id,
-      user_id: userId,
-      name: "Read 20 Pages of Non-Fiction",
-      description: "Expand knowledge in technology, philosophy, or business.",
-      frequency: "daily",
-      target_per_period: 1,
-      is_archived: false,
-    },
-  ], { onConflict: "id" });
+  const { error: habitsError } = await supabase
+    .from("habits")
+    .upsert(seededHabits as never, { onConflict: "id" });
+  if (habitsError) throw new Error(`Failed to seed default habits: ${habitsError.message}`);
 
   // Add completions for past 3 days to build an active streak
   await supabase.from("habit_completions").upsert([
     {
-      habit_id: habit1Id,
+      habit_id: seededHabits[0].id,
       user_id: userId,
       completed_date: addDays(today, -2),
       notes: "15 min mindful session.",
     },
     {
-      habit_id: habit1Id,
+      habit_id: seededHabits[0].id,
       user_id: userId,
       completed_date: addDays(today, -1),
       notes: "Morning breathwork.",
     },
     {
-      habit_id: habit1Id,
+      habit_id: seededHabits[0].id,
       user_id: userId,
       completed_date: today,
       notes: "Done before starting work.",
     },
     {
-      habit_id: habit2Id,
+      habit_id: seededHabits[4].id,
       user_id: userId,
       completed_date: addDays(today, -1),
       notes: "Upper body strength workout.",
     },
     {
-      habit_id: habit2Id,
+      habit_id: seededHabits[4].id,
       user_id: userId,
       completed_date: today,
       notes: "5km morning run completed.",

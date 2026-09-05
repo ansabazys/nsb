@@ -7,6 +7,7 @@ export interface Habit {
   description: string | null;
   frequency: HabitFrequency;
   targetPerPeriod: number;
+  scheduleWeekdays: number[];
   isArchived: boolean;
   createdAt: string;
   updatedAt: string;
@@ -39,6 +40,7 @@ export interface CreateHabitInput {
   description?: string | null;
   frequency?: HabitFrequency;
   targetPerPeriod?: number;
+  scheduleWeekdays?: number[];
 }
 
 export interface UpdateHabitInput {
@@ -46,6 +48,7 @@ export interface UpdateHabitInput {
   description?: string | null;
   frequency?: HabitFrequency;
   targetPerPeriod?: number;
+  scheduleWeekdays?: number[];
   isArchived?: boolean;
 }
 

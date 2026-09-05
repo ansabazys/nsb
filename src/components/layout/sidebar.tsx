@@ -4,16 +4,16 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
-  Flame,
-  Wallet,
-  Target,
-  CheckCircle2,
-  Settings,
-  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
+import { DashboardIcon } from "@/components/icons/dashboard-icon";
+import { HabitsIcon } from "@/components/icons/habits-icon";
+import { ExpensesIcon } from "@/components/icons/expenses-icon";
+import { GoalsIcon } from "@/components/icons/goals-icon";
+import { TasksIcon } from "@/components/icons/tasks-icon";
+import { SettingsIcon } from "@/components/icons/settings-icon";
+import { LogoutIcon } from "@/components/icons/logout-icon";
 
 interface NavItem {
   name: string;
@@ -22,11 +22,11 @@ interface NavItem {
 }
 
 const mainNavItems: NavItem[] = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Habits & Rituals", href: "/habits", icon: Flame },
-  { name: "Expenses & Budget", href: "/expenses", icon: Wallet },
-  { name: "Goals & Targets", href: "/goals", icon: Target },
-  { name: "Tasks & Priorities", href: "/tasks", icon: CheckCircle2 },
+  { name: "Dashboard", href: "/dashboard", icon: DashboardIcon },
+  { name: "Habits & Rituals", href: "/habits", icon: HabitsIcon },
+  { name: "Expenses & Budget", href: "/expenses", icon: ExpensesIcon },
+  { name: "Goals & Targets", href: "/goals", icon: GoalsIcon },
+  { name: "Tasks & Priorities", href: "/tasks", icon: TasksIcon },
 ];
 
 export function Sidebar() {
@@ -101,7 +101,7 @@ export function Sidebar() {
             )}
             aria-label="Settings"
           >
-            <Settings className="h-5 w-5 stroke-[1.8]" />
+            <SettingsIcon className="h-5 w-5" />
           </Link>
 
           {/* Tooltip */}
@@ -119,7 +119,7 @@ export function Sidebar() {
             className="flex h-10 w-10 items-center justify-center rounded-xl bg-transparent text-neutral-500 hover:text-red-400 transition-all duration-200 cursor-pointer"
             aria-label="Sign Out"
           >
-            <LogOut className="h-5 w-5 stroke-[1.8]" />
+            <LogoutIcon className="h-5 w-5" />
           </button>
 
           {/* Tooltip */}

@@ -4,14 +4,14 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  Flame,
-  Wallet,
-  Target,
-  CheckCircle2,
-  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { DashboardIcon } from "@/components/icons/dashboard-icon";
+import { HabitsIcon } from "@/components/icons/habits-icon";
+import { ExpensesIcon } from "@/components/icons/expenses-icon";
+import { GoalsIcon } from "@/components/icons/goals-icon";
+import { TasksIcon } from "@/components/icons/tasks-icon";
+import { SettingsIcon } from "@/components/icons/settings-icon";
 
 interface NavItem {
   name: string;
@@ -20,12 +20,12 @@ interface NavItem {
 }
 
 const mobileNavItems: NavItem[] = [
-  { name: "Home", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Habits", href: "/habits", icon: Flame },
-  { name: "Expenses", href: "/expenses", icon: Wallet },
-  { name: "Goals", href: "/goals", icon: Target },
-  { name: "Tasks", href: "/tasks", icon: CheckCircle2 },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Home", href: "/dashboard", icon: DashboardIcon },
+  { name: "Habits", href: "/habits", icon: HabitsIcon },
+  { name: "Expenses", href: "/expenses", icon: ExpensesIcon },
+  { name: "Goals", href: "/goals", icon: GoalsIcon },
+  { name: "Tasks", href: "/tasks", icon: TasksIcon },
+  { name: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 
 export function MobileNav() {

@@ -13,6 +13,7 @@ export class HabitsRepository {
       description: row.description,
       frequency: row.frequency,
       targetPerPeriod: row.target_per_period,
+      scheduleWeekdays: (row.schedule_weekdays as number[] | undefined) ?? [0, 1, 2, 3, 4, 5, 6],
       isArchived: row.is_archived,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
@@ -94,6 +95,7 @@ export class HabitsRepository {
     if (input.description !== undefined) updatePayload.description = input.description;
     if (input.frequency !== undefined) updatePayload.frequency = input.frequency;
     if (input.targetPerPeriod !== undefined) updatePayload.target_per_period = input.targetPerPeriod;
+    if (input.scheduleWeekdays !== undefined) updatePayload.schedule_weekdays = input.scheduleWeekdays;
     if (input.isArchived !== undefined) updatePayload.is_archived = input.isArchived;
 
     const { data, error } = await this.supabase

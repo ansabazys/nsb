@@ -2,10 +2,13 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { CheckCircle2, Flame, Wallet, Target } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { CreateHabitModal } from "@/modules/habits/components/create-habit-modal";
 import { cn } from "@/lib/utils/cn";
+import { TasksIcon } from "@/components/icons/tasks-icon";
+import { HabitsIcon } from "@/components/icons/habits-icon";
+import { ExpensesIcon } from "@/components/icons/expenses-icon";
+import { GoalsIcon } from "@/components/icons/goals-icon";
 
 export interface QuickActionsProps {
   className?: string;
@@ -98,7 +101,7 @@ export function QuickActions({
     {
       label: "Task",
       href: "/tasks",
-      icon: CheckCircle2,
+      icon: TasksIcon,
       accent: "hover:border-blue-500/50 hover:bg-blue-500/10 hover:text-blue-300 text-neutral-300",
       iconColor: "text-blue-400",
       symbol: "✓",
@@ -106,7 +109,7 @@ export function QuickActions({
     {
       label: "Habit",
       href: "/habits",
-      icon: Flame,
+      icon: HabitsIcon,
       accent: "hover:border-orange-500/50 hover:bg-orange-500/10 hover:text-orange-300 text-neutral-300",
       iconColor: "text-orange-400",
       symbol: "♨",
@@ -114,7 +117,7 @@ export function QuickActions({
     {
       label: "Expense",
       href: "/expenses",
-      icon: Wallet,
+      icon: ExpensesIcon,
       accent: "hover:border-emerald-500/50 hover:bg-emerald-500/10 hover:text-emerald-300 text-neutral-300",
       iconColor: "text-emerald-400",
       symbol: "▣",
@@ -122,7 +125,7 @@ export function QuickActions({
     {
       label: "Goal",
       href: "/goals",
-      icon: Target,
+      icon: GoalsIcon,
       accent: "hover:border-purple-500/50 hover:bg-purple-500/10 hover:text-purple-300 text-neutral-300",
       iconColor: "text-purple-400",
       symbol: "◎",
@@ -194,4 +197,3 @@ export function QuickActions({
     </div>
   );
 }
-

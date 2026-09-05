@@ -6,9 +6,6 @@ import { useRouter, usePathname } from "next/navigation";
 import {
   LogOut,
   Settings,
-  User,
-  Search,
-  Bell,
   CheckCircle2,
   X,
   Sparkles,
@@ -16,6 +13,9 @@ import {
   Wallet,
   Target,
 } from "lucide-react";
+import { SearchIcon } from "@/components/icons/search-icon";
+import { NotificationIcon } from "@/components/icons/notification-icon";
+import { UserAvatarIcon } from "@/components/icons/user-avatar-icon";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { QuickActions } from "@/modules/dashboard/components/quick-actions";
 
@@ -161,7 +161,7 @@ export function TopHeader() {
             aria-label="Search"
             title="Search (⌘K)"
           >
-            <Search className="h-4 w-4" />
+            <SearchIcon className="h-4 w-4" />
           </button>
 
           {/* Small Daily Progress Indicator (e.g. 72%, No Background) */}
@@ -205,7 +205,7 @@ export function TopHeader() {
               aria-label="Notifications"
               title="Notifications"
             >
-              <Bell className="h-4 w-4" />
+              <NotificationIcon className="h-4 w-4" />
               <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400" />
             </button>
 
@@ -243,7 +243,7 @@ export function TopHeader() {
               className="flex h-8 items-center gap-2 px-2.5 rounded-lg bg-neutral-900/90 border border-neutral-800 text-xs font-medium text-neutral-300 hover:text-white hover:border-neutral-700 hover:bg-neutral-800/80 transition-all cursor-pointer shadow-sm"
               aria-label="User Profile Menu"
             >
-              <User className="h-3.5 w-3.5 text-neutral-400" />
+              <UserAvatarIcon className="h-3.5 w-3.5 text-neutral-400" />
               <span className="truncate max-w-[120px] font-medium text-[11px]">
                 {displayName}
               </span>
@@ -268,7 +268,7 @@ export function TopHeader() {
                     onClick={() => setShowProfileMenu(false)}
                     className="flex items-center gap-2 px-2.5 py-1.5 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800/80 rounded-lg transition-colors"
                   >
-                    <User className="h-3.5 w-3.5 text-neutral-400" />
+                    <UserAvatarIcon className="h-3.5 w-3.5 text-neutral-400" />
                     <span>Profile</span>
                   </Link>
 
@@ -317,7 +317,7 @@ export function TopHeader() {
           >
             {/* Search Input Bar */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-neutral-800">
-              <Search className="h-4 w-4 text-neutral-400 shrink-0" />
+              <SearchIcon className="h-4 w-4 text-neutral-400 shrink-0" />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -374,4 +374,3 @@ export function TopHeader() {
     </div>
   );
 }
-
