@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Offline — NSB</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #000000;
+      color: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', monospace, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      text-align: center;
+      background-image: radial-gradient(rgba(255,255,255,0.08) 1.2px, transparent 1.2px);
+      background-size: 24px 24px;
+    }
+    .card {
+      max-width: 360px;
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid #262626;
+      border-radius: 24px;
+      padding: 32px 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .badge {
+      font-family: monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+    .logo {
+      font-family: monospace;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      color: #ffffff;
+    }
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+    p {
+      font-size: 13px;
+      color: #a3a3a3;
+      line-height: 1.5;
+    }
+    .btn {
+      margin-top: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      border-radius: 12px;
+      background: #171717;
+      border: 1px solid #262626;
+      color: #ffffff;
+      font-size: 12px;
+      font-family: monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: #262626;
+      border-color: #404040;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">Connection Status</span>
+    <div class="logo">NSB</div>
+    <h1>You are currently offline</h1>
+    <p>Please check your network connection. Once you are back online, your data will synchronize automatically.</p>
+    <button class="btn" onclick="window.location.reload()">Retry Connection</button>
+  </div>
+</body>
+</html>

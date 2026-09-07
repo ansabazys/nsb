@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#101828" />
+      <stop offset="50%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#030508" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#818cf8" stop-opacity="0.05" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#bg)" stroke="#1e293b" stroke-width="6" />
+  <rect width="500" height="500" x="6" y="6" rx="122" fill="none" stroke="url(#glow)" stroke-width="2" />
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', monospace" font-size="140" font-weight="900" fill="#ffffff" letter-spacing="12">NSB</text>
+  <circle cx="256" cy="380" r="10" fill="#38bdf8" />
+</svg>

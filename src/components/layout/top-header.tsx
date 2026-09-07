@@ -323,6 +323,7 @@ export function TopHeader() {
       {/* 1b. Mobile Header Bar (< md)                                              */}
       {/* ========================================================================= */}
       <div className="relative w-full flex md:hidden items-center justify-between h-8">
+        {/* Left: /menu in the position of /dashboard */}
         <button
           type="button"
           onClick={() => setShowMobileMenu(true)}
@@ -331,6 +332,13 @@ export function TopHeader() {
         >
           /menu
         </button>
+
+        {/* Center: Current Date in the center of mobile header */}
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center pointer-events-none select-none">
+          <span className="text-xs font-mono text-white font-medium uppercase leading-none tracking-tight">
+            {formattedDate}
+          </span>
+        </div>
       </div>
 
       {/* ========================================================================= */}
