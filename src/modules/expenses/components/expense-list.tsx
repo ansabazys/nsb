@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/shared/empty-state";
 
+import { isIncomeTransaction, formatTransactionDescription } from "../expenses.utils";
+import { cn } from "@/lib/utils/cn";
+
 export interface ExpenseListProps {
   expenses: ExpenseWithCategory[];
   onDelete?: (expenseId: string) => void;
@@ -52,20 +55,27 @@ export function ExpenseList({
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-200">
-            {expenses.map((expense) => (
-              <tr key={expense.id} className="hover:bg-neutral-50/50">
-                <td className="px-4 py-3 text-xs text-neutral-500">
-                  {expense.date}
-                </td>
-                <td className="px-4 py-3 font-medium text-neutral-900">
-                  {expense.description || "Untitled Expense"}
-                </td>
-                <td className="px-4 py-3">
-                  <Badge variant="outline">{expense.category.name}</Badge>
-                </td>
-                <td className="px-4 py-3 text-right font-semibold text-neutral-900">
-                  ${expense.amount.toFixed(2)}
-                </td>
+            {expenses.map((expense) => {
+              const isIncome = isIncomeTransaction(expense);
+              return (
+                <tr key={expense.id} className="hover:bg-neutral-50/50">
+                  <td className="px-4 py-3 text-xs text-neutral-500">
+                    {expense.date}
+                  </td>
+                  <td className="px-4 py-3 font-medium text-neutral-900">
+                    {formatTransactionDescription(expense.description) || (isIncome ? "Income" : "Untitled Expense")}
+                  </td>
+                  <td className="px-4 py-3">
+                    <Badge
+                      variant={isIncome ? "secondary" : "outline"}
+                      className={isIncome ? "bg-emerald-500/15 text-emerald-700 border-emerald-500/30" : undefined}
+                    >
+                      {expense.category.name}
+                    </Badge>
+                  </td>
+                  <td className={cn("px-4 py-3 text-right font-semibold", isIncome ? "text-emerald-600" : "text-neutral-900")}>
+                    {isIncome ? `+$${expense.amount.toFixed(2)}` : `-$${expense.amount.toFixed(2)}`}
+                  </td>
                 <td className="px-4 py-3 text-right">
                   {onDelete && (
                     <Button
@@ -80,7 +90,8 @@ export function ExpenseList({
                   )}
                 </td>
               </tr>
-            ))}
+            );
+          })}
           </tbody>
         </table>
       </div>

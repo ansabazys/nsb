@@ -90,3 +90,70 @@ export function calculateMonthlySummary(
     categories,
   };
 }
+
+export interface BalanceSummary {
+  totalIncome: number;
+  totalExpense: number;
+  netBalance: number;
+}
+
+/**
+ * Determines whether a transaction record represents an income.
+ */
+export function isIncomeTransaction(expense: {
+  category?: { name?: string | null } | null;
+  description?: string | null;
+}): boolean {
+  const catName = expense.category?.name?.toLowerCase().trim() ?? "";
+  const desc = expense.description?.toLowerCase().trim() ?? "";
+
+  if (
+    catName === "income" ||
+    catName.startsWith("income") ||
+    catName.includes("salary") ||
+    catName.includes("freelance & bonus")
+  ) {
+    return true;
+  }
+
+  if (desc.startsWith("[income]")) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Removes the [INCOME] marker prefix for clean user display.
+ */
+export function formatTransactionDescription(description?: string | null): string {
+  if (!description) return "";
+  return description.replace(/^\[income\]\s*/i, "").trim();
+}
+
+/**
+ * Calculates total income, total expense, and net balance from transactions.
+ */
+export function calculateBalanceSummary(
+  transactions: ExpenseWithCategory[]
+): BalanceSummary {
+  let totalIncome = 0;
+  let totalExpense = 0;
+
+  for (const item of transactions) {
+    const amount = Number(item.amount) || 0;
+    if (isIncomeTransaction(item)) {
+      totalIncome += amount;
+    } else {
+      totalExpense += amount;
+    }
+  }
+
+  const netBalance = Number((totalIncome - totalExpense).toFixed(2));
+
+  return {
+    totalIncome: Number(totalIncome.toFixed(2)),
+    totalExpense: Number(totalExpense.toFixed(2)),
+    netBalance,
+  };
+}

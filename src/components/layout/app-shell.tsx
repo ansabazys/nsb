@@ -32,7 +32,7 @@ export function AppShell({ children }: AppShellProps) {
         </header>
 
         {/* Main Workspace */}
-        <main className="flex-1 w-full max-w-7xl">
+        <main className="flex-1 w-full">
           {children}
         </main>
       </div>

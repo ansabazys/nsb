@@ -89,6 +89,9 @@ async function seed() {
     { id: "50000000-0000-0000-0000-000000000004", name: "Health & Fitness", is_system: true, color: "#EC4899" },
     { id: "50000000-0000-0000-0000-000000000005", name: "Entertainment & Leisure", is_system: true, color: "#8B5CF6" },
     { id: "50000000-0000-0000-0000-000000000006", name: "Personal Development", is_system: true, color: "#06B6D4" },
+    { id: "50000000-0000-0000-0000-000000000007", name: "Income", is_system: true, color: "#10B981" },
+    { id: "50000000-0000-0000-0000-000000000008", name: "Salary", is_system: true, color: "#059669" },
+    { id: "50000000-0000-0000-0000-000000000009", name: "Freelance & Bonus", is_system: true, color: "#34D399" },
   ];
 
   await supabase.from("expense_categories").upsert(categories, { onConflict: "id" });
@@ -253,6 +256,15 @@ async function seed() {
       currency: "USD",
       date: addDays(today, -3),
       description: "Audible subscription & audiobooks",
+    },
+    {
+      id: "40000000-0000-0000-0000-000000000014",
+      user_id: userId,
+      expense_category_id: "50000000-0000-0000-0000-000000000008", // Salary
+      amount: 3500.00,
+      currency: "USD",
+      date: addDays(today, -4),
+      description: "[INCOME] Monthly Salary",
     },
   ], { onConflict: "id" });
   console.log("✅ Expenses seeded.");

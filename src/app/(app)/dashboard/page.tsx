@@ -8,7 +8,7 @@ import { ExpenseWidget } from "@/modules/dashboard/components/expense-widget";
 import { MorningRunWidget } from "@/modules/dashboard/components/morning-run-widget";
 import { mapHabitToWidgetItem } from "@/modules/dashboard/dashboard.utils";
 import type { HabitWidgetItem } from "@/modules/dashboard/dashboard.types";
-import type { ExpenseWithCategory } from "@/modules/expenses/expenses.types";
+import type { ExpenseWithCategory, ExpenseCategory } from "@/modules/expenses/expenses.types";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +21,7 @@ export default async function DashboardPage() {
   let habitItems: HabitWidgetItem[] = [];
   let morningRunStreak = 0;
   let monthExpenses: ExpenseWithCategory[] = [];
+  let expenseCategories: ExpenseCategory[] = [];
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth() + 1;
@@ -41,17 +42,26 @@ export default async function DashboardPage() {
     const expensesService = new ExpensesService(supabase);
     const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
     const endDate = `${year}-${String(month).padStart(2, "0")}-${String(new Date(year, month, 0).getDate()).padStart(2, "0")}`;
-    const result = await expensesService.getExpensesByDateRange(user.id, startDate, endDate);
+    const [result, categories] = await Promise.all([
+      expensesService.getExpensesByDateRange(user.id, startDate, endDate),
+      expensesService.getExpenseCategories(user.id),
+    ]);
     monthExpenses = result.expenses;
+    expenseCategories = categories;
   } catch (error) {
     console.error("Failed to load dashboard expenses:", error);
   }
 
   return (
-    <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-start">
+    <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
       {/* Dashboard Canvas */}
-      <HabitWidget initialHabits={habitItems} />
-      <ExpenseWidget expenses={monthExpenses} year={year} month={month} />
+      <ExpenseWidget
+        expenses={monthExpenses}
+        categories={expenseCategories}
+        year={year}
+        month={month}
+      />
+      <HabitWidget initialHabits={habitItems} className="hidden lg:flex lg:ml-auto" />
       {/* <MorningRunWidget streak={morningRunStreak} /> */}
     </div>
   );

@@ -3,15 +3,12 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { DashboardIcon } from "@/components/icons/dashboard-icon";
 import { HabitsIcon } from "@/components/icons/habits-icon";
 import { ExpensesIcon } from "@/components/icons/expenses-icon";
 import { GoalsIcon } from "@/components/icons/goals-icon";
 import { TasksIcon } from "@/components/icons/tasks-icon";
-import { SettingsIcon } from "@/components/icons/settings-icon";
 
 interface NavItem {
   name: string;
@@ -25,14 +22,13 @@ const mobileNavItems: NavItem[] = [
   { name: "Expenses", href: "/expenses", icon: ExpensesIcon },
   { name: "Goals", href: "/goals", icon: GoalsIcon },
   { name: "Tasks", href: "/tasks", icon: TasksIcon },
-  { name: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 
 export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-4 left-4 right-4 z-40 flex items-center justify-around p-2 rounded-2xl bg-neutral-900/95 border border-neutral-800 backdrop-blur-xl shadow-2xl">
+    <nav className="md:hidden fixed bottom-4 left-0 right-0 z-40 flex items-center justify-around px-4 pointer-events-none select-none">
       {mobileNavItems.map((item) => {
         const Icon = item.icon;
         const isActive =
@@ -44,18 +40,18 @@ export function MobileNav() {
             key={item.href}
             href={item.href}
             className={cn(
-              "flex flex-col items-center justify-center p-2 rounded-xl transition-colors",
+              "pointer-events-auto flex h-11 w-11 items-center justify-center rounded-xl bg-transparent transition-colors",
               isActive
-                ? "text-white bg-white/10"
-                : "text-neutral-400 hover:text-white"
+                ? "text-white"
+                : "text-neutral-500 hover:text-neutral-200 active:text-white"
             )}
             aria-label={item.name}
           >
-            <Icon className="h-5 w-5 stroke-[1.8]" />
-            <span className="text-[10px] font-medium mt-1">{item.name}</span>
+            <Icon className={cn("h-5 w-5 stroke-[1.8]", isActive && "stroke-[2.2]")} />
           </Link>
         );
       })}
     </nav>
   );
 }
+

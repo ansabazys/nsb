@@ -18,6 +18,7 @@ import { NotificationIcon } from "@/components/icons/notification-icon";
 import { UserAvatarIcon } from "@/components/icons/user-avatar-icon";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { QuickActions } from "@/modules/dashboard/components/quick-actions";
+import { cn } from "@/lib/utils/cn";
 
 export function TopHeader() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export function TopHeader() {
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
   const [showNotifications, setShowNotifications] = React.useState(false);
   const [showSearchModal, setShowSearchModal] = React.useState(false);
+  const [showMobileMenu, setShowMobileMenu] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [userEmail, setUserEmail] = React.useState<string | null>(null);
   const [formattedDate, setFormattedDate] = React.useState<string>("Wed, Sep 2");
@@ -34,6 +36,23 @@ export function TopHeader() {
   const profileRef = React.useRef<HTMLDivElement>(null);
   const notificationsRef = React.useRef<HTMLDivElement>(null);
   const searchInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Close mobile menu on route change
+  React.useEffect(() => {
+    setShowMobileMenu(false);
+  }, [pathname]);
+
+  // Lock body scroll when mobile menu is open
+  React.useEffect(() => {
+    if (showMobileMenu) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showMobileMenu]);
 
   React.useEffect(() => {
     const supabase = createBrowserSupabaseClient();
@@ -84,6 +103,7 @@ export function TopHeader() {
         setShowSearchModal(false);
         setShowProfileMenu(false);
         setShowNotifications(false);
+        setShowMobileMenu(false);
       }
     }
     window.addEventListener("keydown", handleKeyDown);
@@ -133,9 +153,9 @@ export function TopHeader() {
   return (
     <div className="w-full flex flex-col gap-3 mb-6">
       {/* ========================================================================= */}
-      {/* 1. Header Bar                                                             */}
+      {/* 1a. Desktop Header Bar (>= md)                                            */}
       {/* ========================================================================= */}
-      <div className="relative w-full flex items-center justify-between gap-4 h-8">
+      <div className="relative w-full hidden md:flex items-center justify-between gap-4 h-8">
 
         {/* Left: Active Route Path / Breadcrumb */}
         <div className="flex items-center shrink-0">
@@ -145,7 +165,7 @@ export function TopHeader() {
         </div>
 
         {/* Center: Current Date (Exact Screen Center - 50vw) */}
-        <div className="fixed left-1/2 -translate-x-1/2 top-4 sm:top-8 h-8 flex items-center justify-center pointer-events-none select-none z-30">
+        <div className="fixed left-1/2 -translate-x-1/2 top-8 h-8 hidden md:flex items-center justify-center pointer-events-none select-none z-30">
           <span className="text-xs font-mono text-white font-medium uppercase leading-none tracking-tight">
             {formattedDate}
           </span>
@@ -300,11 +320,117 @@ export function TopHeader() {
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. Quick Actions Section Directly Below Header                            */}
+      {/* 1b. Mobile Header Bar (< md)                                              */}
       {/* ========================================================================= */}
-      <div className="w-full">
-        <QuickActions />
+      <div className="relative w-full flex md:hidden items-center justify-between h-8">
+        <button
+          type="button"
+          onClick={() => setShowMobileMenu(true)}
+          className="text-xs font-mono text-neutral-400 hover:text-white font-medium leading-none uppercase tracking-wider transition-colors cursor-pointer py-1"
+          aria-label="Open menu"
+        >
+          /menu
+        </button>
       </div>
+
+      {/* ========================================================================= */}
+      {/* Mobile Slide-over Menu Drawer                                            */}
+      {/* ========================================================================= */}
+      {showMobileMenu && (
+        <div
+          className="fixed inset-0 z-50 flex md:hidden bg-black/80 backdrop-blur-sm animate-in fade-in-0 duration-200"
+          onClick={() => setShowMobileMenu(false)}
+        >
+          <div
+            className="w-[280px] max-w-[80vw] h-full bg-neutral-950 border-r border-neutral-800 p-5 flex flex-col justify-between shadow-2xl animate-in slide-in-from-left duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col gap-6">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-800">
+                <span className="text-xs font-mono text-white font-medium uppercase tracking-wider">
+                  /menu
+                </span>
+                <button
+                  onClick={() => setShowMobileMenu(false)}
+                  className="p-1 text-neutral-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+                  aria-label="Close menu"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Search Shortcut */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  setShowSearchModal(true);
+                }}
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-neutral-900 border border-neutral-800 text-xs text-neutral-400 hover:text-white hover:border-neutral-700 transition-colors text-left"
+              >
+                <SearchIcon className="h-3.5 w-3.5" />
+                <span>Search (⌘K)</span>
+              </button>
+
+              {/* Navigation Links */}
+              <div className="flex flex-col gap-1">
+                {searchItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== "/dashboard" && pathname?.startsWith(item.href));
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setShowMobileMenu(false)}
+                      className={cn(
+                        "flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-colors",
+                        isActive
+                          ? "bg-neutral-800 text-white font-semibold"
+                          : "text-neutral-400 hover:text-white hover:bg-neutral-900"
+                      )}
+                    >
+                      <Icon className="h-4 w-4 shrink-0 text-neutral-400" />
+                      <span>{item.title}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* User Profile & Sign Out Footer */}
+            <div className="pt-4 border-t border-neutral-800 flex flex-col gap-3">
+              <div className="flex items-center gap-2.5 px-1">
+                <UserAvatarIcon className="h-4 w-4 text-neutral-400 shrink-0" />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs font-medium text-white truncate">{displayName}</span>
+                  <span className="text-[10px] text-neutral-500 truncate font-mono">
+                    {userEmail || "ansab@gmail.com"}
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-red-400 hover:text-red-300 hover:bg-red-950/40 transition-colors cursor-pointer text-left"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 2. Quick Actions Section Directly Below Header (Hidden in Mobile View)    */}
+      {/* ========================================================================= */}
+      {!pathname?.startsWith("/expenses") && (
+        <div className="hidden md:block w-full">
+          <QuickActions />
+        </div>
+      )}
 
       {/* ========================================================================= */}
       {/* Search Command Dialog Overlay                                             */}
